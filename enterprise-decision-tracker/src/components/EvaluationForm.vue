@@ -3,14 +3,8 @@
     <form @submit.prevent="handleEvaluation">
         <div class="mb-5">
             <label for="checkbox" class="block mb-2 text-sm font-medium text-gray-900">Was the goal met?</label>
-            <div class="flex mb-5">
-                <label class="inline-flex items-center w-1/3 cursor-pointer">
-                <input type="checkbox" class="sr-only peer" @change="handleToggle" :checked="!props.decision.isActive">
-                <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300  rounded-full peer  peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                <span class="ms-3 text-sm font-medium text-gray-900">{{ currentStatus }}</span>
-                </label>
-            </div>
-            <div class="mb-5">
+            <toggle-button :checked="isGoalMet" :currentStatus="currentStatus" @update:status="handleToggle"/>
+            <div class="my-5">
               <label for="comments" class="block mb-2 text-sm font-medium text-gray-900">Comments:</label>
               <textarea 
                 v-model="comments"
@@ -38,6 +32,7 @@
 <script setup>
 import AlertModal from './AlertModal.vue';
 import { computed, ref } from 'vue';
+import ToggleButton from './ToggleButton.vue';
 
 const props = defineProps({
   showModal: {
@@ -47,10 +42,16 @@ const props = defineProps({
   decision: Object,
 });
 
-const emit = defineEmits(['close-modal', 'save-form', 'update:isGoalMet']);
+const emit = defineEmits(['close-modal', 'save-form']);
 
-const comments = ref('');
-const isGoalMet = ref(true);
+// Make isGoalMet and isActive reactive
+const isGoalMet = ref(props.decision.isGoalMet);
+const comments = ref(props.decision.comments);
+
+
+// Determine the current status for checkbox label
+const currentStatus = computed(() => (isGoalMet.value ? 'Yes' : 'No'));
+
 
 // Close the modal when clicked outside
 const closeModal = () => {
@@ -58,9 +59,8 @@ const closeModal = () => {
 };
 
 // Handle the toggle event and update isGoalMet
-const handleToggle = (event) => {
-  isGoalMet.value = event.target.checked;
-  emit('update:isGoalMet', isGoalMet.value); // Emit the new value
+const handleToggle = (status) => {
+  isGoalMet.value = status;
 };
 
 // Save form data and emit to parent
@@ -68,11 +68,6 @@ const saveForm = () => {
   const evaluatedDecision = { ...props.decision }; // Create a copy of the decision
   evaluatedDecision.isGoalMet = isGoalMet.value;
   evaluatedDecision.comments = comments.value;
-  console.log(evaluatedDecision);
   emit('save-form', evaluatedDecision); // Emit the entire updated decision
 };
-
-// Determine the current status for checkbox label
-const currentStatus = computed(() => (!props.decision.isActive ? 'Yes' : 'No'));
-
 </script>
