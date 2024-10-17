@@ -30,9 +30,9 @@
 </template>
 
 <script setup>
-import AlertModal from './AlertModal.vue';
+import AlertModal from './shared/AlertModal.vue';
 import { computed, ref } from 'vue';
-import ToggleButton from './ToggleButton.vue';
+import ToggleButton from './shared/ToggleButton.vue';
 
 const props = defineProps({
   showModal: {

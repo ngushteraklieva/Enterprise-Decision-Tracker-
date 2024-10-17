@@ -12,9 +12,9 @@
 
     <script setup>
     import { computed } from 'vue';
-    import ToggleButton from './ToggleButton.vue';
-    import ButtonComponent from './ButtonComponent.vue';
-    import GoalStatus from './GoalStatusComponent.vue';
+    import ToggleButton from './shared/ToggleButton.vue';
+    import ButtonComponent from './shared/ButtonComponent.vue';
+    import GoalStatus from './shared/GoalStatusComponent.vue';
     
     const props = defineProps({
         decision: Object,

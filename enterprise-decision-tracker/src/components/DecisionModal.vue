@@ -48,7 +48,7 @@
 
 <script setup>
 import { ref, computed, defineEmits, defineProps, watch } from 'vue';
-import AlertModal from './AlertModal.vue';
+import AlertModal from './shared/AlertModal.vue';
 
 // Props to control visibility of the modal and selected decision data
 const props = defineProps({
